@@ -6,15 +6,18 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.duoc.LearningPlatform.model.Evaluacion;
+import com.duoc.LearningPlatform.repository.CursoRepository;
 import com.duoc.LearningPlatform.repository.EvaluacionRepository;
 
 @Service
 public class EvaluacionService {
 
     private final EvaluacionRepository evaluacionRepository;
+    private final CursoRepository cursoRepository;
 
-    public EvaluacionService(EvaluacionRepository evaluacionRepository){
+    public EvaluacionService(EvaluacionRepository evaluacionRepository, CursoRepository cursoRepository){
         this.evaluacionRepository = evaluacionRepository;
+        this.cursoRepository = cursoRepository;
     }
 
     // Obtener todas las evaluaciones
@@ -22,8 +25,11 @@ public class EvaluacionService {
         return evaluacionRepository.findAll();
     }
 
-    // Obtener las evaluaciones por curso
+    // Obtener las evaluaciones por cursoId
     public List<Evaluacion> obtenerEvaluacionesPorCurso(long cursoId){
+        if(! cursoRepository.existsById(cursoId)){
+            throw new RuntimeException("El curso no existe");
+        } 
         return evaluacionRepository.findByCursoId(cursoId);
     }
 
