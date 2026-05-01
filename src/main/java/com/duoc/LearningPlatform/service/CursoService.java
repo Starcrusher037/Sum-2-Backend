@@ -4,37 +4,49 @@ import com.duoc.LearningPlatform.model.Curso;
 import com.duoc.LearningPlatform.repository.CursoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CursoService {
 
+    
     private final CursoRepository cursoRepository;
 
     public CursoService(CursoRepository cursoRepository) {
         this.cursoRepository = cursoRepository;
     }
 
-    //utiliza la funcion de la interface para la obtencion de cursos activos
-    public List<Curso> obtenerCursosActivos() {
-        return cursoRepository.findByActivoTrueOrderByNombreAsc();
+    //Obtencion de todos los cursos
+    public List<Curso> obtenerTodosCursos() {
+        return cursoRepository.findAll();
     }
 
-    //obtiene cursos activos y los formatea, devuelve lista de string con los datos del curso
-    public List<String> obtenerCursosFormateados() {
-        List<Curso> cursos = obtenerCursosActivos();
-        List<String> resultado = new ArrayList<>();
-
-        //por cada curso en la lista "cursos" obtiene el nombre, docente y cantidad de horas,
-        //  esto lo inserta en la lista resultado. 
-        for (Curso curso : cursos) {
-            String texto = "Curso: " + curso.getNombre()
-                    + " | Docente: " + curso.getDocente()
-                    + " | Duración: " + curso.getDuracionHoras() + " horas";
-            resultado.add(texto);
-        }
-        return resultado;
+    //obtiene cursos por id 
+    public Optional<Curso> obtenerCursoPorId(Long id) {
+      return cursoRepository.findById(id);
     }
     
+    // Agregar curso
+    public Curso registrarCurso(Curso curso){
+        return cursoRepository.save(curso);
+    }
+
+    //Modificar curso por id
+    public Optional<Curso> modificarCurso(long id, Curso curso){
+        if(cursoRepository.existsById(id)){
+            curso.setId(id);
+            return Optional.of(cursoRepository.save(curso));
+        }
+        return Optional.empty();
+    }
+
+    // Borrar curso por id
+    public Boolean eliminarCurso(long id){
+        if(!cursoRepository.existsById(id)){
+            return false;
+        }
+        cursoRepository.deleteById(id);
+        return true;
+    }
 }

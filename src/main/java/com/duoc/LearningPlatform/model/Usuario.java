@@ -1,24 +1,25 @@
 package com.duoc.LearningPlatform.model;
 
+import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-@Data
 @Entity
-@Table(name = "curso")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "usuario")
 
-public class Curso {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +29,12 @@ public class Curso {
     private String nombre;
 
     @NotBlank
-    private String descripcion;
+    private String correo;
 
-    @NotNull
-    @Min(value = 1)
-    private Long profesorId;
-    
+    @NotBlank
+    private String contrasenia;
+
+    @NotBlank
+    @Pattern(regexp = "profesor|alumno", message = "El rol debe ser 'profesor' o 'alumno'")
+    private String rol;
 }
